@@ -1,0 +1,438 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+}
+
+/* === DISPLAY: NONE === */
+
+#reset, .dragging #url, .loaded #start, div.left, #controls, #controls input[type=checkbox]:checked ~ input[type=color]:after {
+  display: none;
+}
+
+/* === DISPLAY: BLOCK === */
+
+#start, .loaded div.left, .loaded #controls, loaded.dragging #dropzone {
+  display: block;
+}
+
+/* === DISPLAY: FLEX === */
+
+.loaded #reset {
+  display: flex;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+  font-size: 0.8rem;
+  line-height: 1.3rem;
+  height: 100%;
+}
+
+#wrapper {
+  width: 740px;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+#start {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.loaded.dragging #start {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(255,255,255,0.95);
+  z-index: 1;
+  border-radius: 25px;
+}
+
+#dropzone {
+  width: calc(100% - 40px);
+  height: calc(70% - 40px);
+  padding: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.dragging #dropzone {
+  height: calc(100% - 40px);
+}
+
+#file {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: pointer;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+#dropzone label {
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
+  border: 10px dashed #ccc;
+  border-radius: 25px;
+  display: flex;
+  color: #ccc;
+  justify-content: center;
+  align-items: center;
+}
+
+.dragging #dropzone:hover label {
+  border-color: lightgreen;
+  color: lightgreen;
+}
+
+#dropzone:hover label {
+  border-color: #aaa;
+  color: #aaa;
+}
+
+#dropzone label span {
+  display: block;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+#url {
+  width: 100%;
+  height: calc(30% - 40px);
+  padding: 20px 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  color: #ccc;
+  text-align: center;
+}
+
+#url label {
+  margin: 0 0 10px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  display: block;
+}
+
+#url input {
+  width: calc(100% - 80px);
+  margin: 0 auto;
+  padding: 5px 20px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 25px;
+  color: #ccc;
+  display: block;
+  font-size: 1.2rem;
+}
+
+#url input:hover,
+#url input:focus {
+  background: #fff;
+  color: #444;
+}
+
+header {
+  height: 60px;
+}
+
+.loaded header {
+  padding-left: 60px;
+}
+
+h1 {
+  padding: 10px 0 0;
+  font-size: 1rem;
+}
+
+#reset {
+  width: 50px;
+  height: 50px;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: bold;
+  background: #eee;
+  color: #444;
+  border-radius: 25px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 5px;
+  left: 0;
+  user-select: none;
+}
+
+#reset:hover {
+  background-color: lightsalmon;
+  color: #000;
+}
+
+main {
+  height: calc(100% - 80px);
+  background-color: #f4f4f4;
+  background-image: linear-gradient(45deg, #eee 25%, transparent 25%), linear-gradient(135deg, #eee 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #eee 75%), linear-gradient(135deg, transparent 75%, #eee 75%);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 0, 20px -20px, 0px 20px;
+  border-radius: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+main > .left {
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(210,210,210,0.7) 0%,rgba(250,250,250,0.7) 100%);
+  border-radius: 25px 0 0 25px;
+
+}
+
+#display {
+  height: calc(100% - 147px);
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.left > fieldset {
+  height: 107px;
+  padding: 20px;
+  color: rgba(0,0,0,0.5);
+  font-size: 0.7rem;
+}
+
+.left > fieldset legend {
+  height: 20px;
+  margin-bottom: 5px;
+  line-height: 20px;
+  position: relative;
+  top: 20px;
+}
+
+.left legend span {
+  margin: 0 5px;
+  cursor: pointer;
+  color: rgba(0,0,0,0.3);
+}
+
+.left legend span:hover {
+  text-decoration: none;
+  text-decoration: underline;
+}
+
+.left legend span.on {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.left legend span.on:hover {
+
+}
+
+.left fieldset > div {
+  overflow: hidden;
+  display: inline-block;
+}
+
+.left fieldset > div:nth-of-type(1) {
+  width: 70%;
+}
+
+.left fieldset > div:nth-of-type(2) {
+  width: 30%;
+  text-align: right;
+}
+
+.left fieldset input[type=number] {
+  width: 50px;
+  height: 23px;
+  margin-right: 3px;
+  padding: 0 5px;
+  background: rgba(255, 255, 255, 0.6);
+  color: rgba(0,0,0,0.5);
+  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: right;
+  -moz-appearance: textfield;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.left fieldset input[type=number]:hover,
+.left fieldset input[type=number]:focus {
+  background: #fff;
+  color: #000;
+}
+
+#export_size span {
+  width: 21px;
+  display: inline-block;
+}
+
+#export_size span:first-of-type {
+  margin-right: 20px;
+}
+
+.left fieldset label {
+  cursor: pointer;
+}
+
+.left fieldset input[type=radio] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  position: relative;
+  top: 5px;
+}
+
+.left fieldset input[type=radio]:last-of-type {
+  margin-left: 10px;
+}
+
+.left fieldset > div:nth-of-type(1) label {
+  padding-right: 5px;
+}
+
+.left fieldset > div:nth-of-type(2) label {
+  padding-left: 5px;
+}
+
+button#download {
+  width: 100%;
+  height: 50px;
+  margin: 0 auto;
+  background: #b9ffba;
+  font-size: 1.2rem;
+  line-height: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  display: block;
+  cursor: pointer;
+}
+
+button#download:hover {
+  background: #b2f590;
+}
+
+#controls {
+  width: 40%;
+  height: 100%;
+  background: rgb(255,230,230);
+  border-radius: 0 25px 25px 0;
+  overflow: auto;
+}
+
+#controls h2 {
+    padding: 13px 10px;
+    text-align: center;
+}
+
+#controls fieldset > div {
+  margin-bottom: 5px;
+  background-color: rgba(255,255,255,0.2);
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+#controls input[type=checkbox] {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: calc(50% - 10px);
+  left: 20px;
+  cursor: pointer;
+}
+
+#controls label {
+  padding: 12px 80px 12px 60px;
+  color: rgba(0, 0, 0, 0.5);
+  display: block;
+  cursor: pointer;
+}
+
+#controls input[type=checkbox]:checked + label {
+  color: rgba(0, 0, 0, 1);
+}
+
+#controls input[type=color] {
+  width: 30px;
+  height: 30px;
+  border-radius: 20px;
+  border: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: width 0.1s, height 0.1s, top 0.1s, right 0.1s;
+  position: absolute;
+  right: 20px;
+  top: calc(50% - 15px);
+}
+
+input[type=color]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input[type=color]::-webkit-color-swatch {
+  border: none;
+  border-radius: 20px;
+}
+
+#controls input[type=color]:hover {
+  width: 36px;
+  height: 36px;
+  top: calc(50% - 18px);
+  right: 17px;
+}
+
+#controls input[type=color]:after {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.5);
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#controls fieldset > div:hover {
+  background-color: rgba(255,255,255,0.7);
+}
+
+footer {
+  height: 20px;
+}
+
+footer input[type=number] {
+  width: 5ch;
+  height: 30px;
+  padding: 2px 10px;
+  font-size: 1.3rem;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

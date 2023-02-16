@@ -1,0 +1,42 @@
+{
+  "name": "svg-custom-exporter",
+  "version": "1.0.0",
+  "description": "A JavaScript browser app that can export SVG files into custom size JPG or PNG images",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "serve": "webpack serve",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmrk/SVG-custom-exporter.git"
+  },
+  "keywords": [
+    "SVG",
+    "JPG",
+    "PNG",
+    "JavaScript",
+    "export"
+  ],
+  "author": "Tamas Marki",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tmrk/SVG-custom-exporter/issues"
+  },
+  "homepage": "https://tmrk.github.io/SVG-custom-exporter/",
+  "dependencies": {
+    "css-loader": "^6.7.3",
+    "gh-pages": "^5.0.0",
+    "redom": "^3.29.1",
+    "sass": "^1.58.1",
+    "sass-loader": "^13.2.0",
+    "style-loader": "^3.3.1",
+    "terser-webpack-plugin": "^5.3.6",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
+  }
+}
