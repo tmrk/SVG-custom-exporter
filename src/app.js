@@ -1,6 +1,10 @@
 'use strict';
 import { el } from 'redom';
 import './app.scss';
+import githublogo from './assets/github-mark.svg';
+import icon_fullscreen from './assets/fullscreen_black_48dp.svg';
+import icon_fullscreen_exit from './assets/fullscreen_exit_black_48dp.svg';
+
 /*
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -15,9 +19,10 @@ if ('serviceWorker' in navigator) {
 
 let url = new URL(window.location);
 let svgElementList = 'rect,path,circle,line,polygon,polyline,text,textPath,ellipse';
-let display = el('div#display');
+let display = el('#display');
 let controlsList = el('fieldset');
 let imageTitle = 'image';
+let fullscreen = JSON.parse(localStorage.getItem('fullscreen'));
 
 // Removes duplicates from array
 const unique = function (arr) {
@@ -34,7 +39,7 @@ const unique = function (arr) {
 
 // Converts RGB value to hexadecimal
 const rgbToHex = function (rgb) {
-  if (rgb) {
+  if (rgb && rgb !== 'none') {
     let colours = rgb.split(')')[0].split('rgb(')[1].split(', ');
     let res = '#'
     for (var i = 0; i < colours.length; i++) {
@@ -51,6 +56,12 @@ const rgbToHex = function (rgb) {
 // Capitalse first letter of a string
 const capitalise = function(s) {
   if (s) return s[0].toUpperCase() + s.slice(1);
+}
+
+// Returns SVG as a DOM element
+const SVGParser = function (str) {
+  const parser = new DOMParser();
+  return parser.parseFromString(str, 'text/html').body.childNodes[0];
 }
 
 const getOpt = function (key) {
@@ -216,11 +227,33 @@ const changeExportUnit = function (e) {
 
 const renderPage = function (classes) {
   cleanOpt();
+  const resizeButton = () => fullscreen ? SVGParser(icon_fullscreen_exit) : SVGParser(icon_fullscreen);
   let wrapper = el('#wrapper', [
     el('header', [
-      el('h1', 'SVG exporter'),
-      el('span#image_title', imageTitle.replace(/_/g, ' ')),
-      el('span#reset', el('span', 'Reset'), { title: 'Click here to reset everything', onclick: resetPage })
+      el('.title', [
+        el('h1', 'SVG Custom Exporter'),
+        el('span#image_title', imageTitle.replace(/_/g, ' ')),
+        el('span#reset', el('span', 'Reset'), { title: 'Click here to reset everything', onclick: resetPage }),
+      ]),
+      el('a.github', SVGParser(githublogo), {href: 'https://github.com/tmrk/SVG-custom-exporter', title: 'Code on GitHub'}),
+      el('div.resize', resizeButton(), {
+        title: fullscreen ? 'Exit fullscreen' : 'Go fullscreen', 
+        onclick: function(e) {
+          e.stopPropagation();
+          fullscreen = !fullscreen;
+          if (fullscreen) {
+            wrapper.classList.add('fullscreen');
+            this.title = 'Exit fullscreen';
+          }
+          else {
+            wrapper.classList.remove('fullscreen');
+            this.title = 'Go fullscreen';
+          }
+          this.innerHTML = null;
+          this.appendChild(resizeButton());
+          localStorage.setItem('fullscreen', fullscreen);
+        }
+      })
     ]),
     el('main', [
       el('div#start', [
@@ -250,7 +283,7 @@ const renderPage = function (classes) {
         ]),
         el('#url', [
           el('label', 'Or paste a URL path to an SVG file:', { for: 'urlsrc' }),
-          el('input#urlsrc', { type: 'text', spellcheck: false, value: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg' }),
+          el('input#urlsrc', { type: 'text', spellcheck: false, onfocus: selectThis, value: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg' }),
           el('button', 'Open', { onclick: function() {
             fetchSVG(document.getElementById('urlsrc').value);
             wrapper.classList.add('loaded');
@@ -305,7 +338,9 @@ const processSVG = function(svg) {
   node.appendChild(doc.documentElement);
   let svgNode = node.childNodes[0];
   let svgParts = Array.from(svgNode.querySelectorAll(svgElementList));
-  svgNode.style.height = '80%';
+  svgNode.style.width = '100%';
+  svgNode.style.height = '100%';
+  svgNode.style.padding = '10px';
   display.append(svgNode);
 
   original.width = Math.round(svgNode.width.baseVal.value);
@@ -333,7 +368,6 @@ const processSVG = function(svg) {
       : Array.from(svgParts[i].childNodes).filter(tag => tag.tagName === 'title')[0]
       ? Array.from(svgParts[i].childNodes).filter(tag => tag.tagName === 'title')[0].innerHTML
       : capitalise(svgParts[i].tagName) + ' ' + tags[svgParts[i].tagName];
-
     let fill = rgbToHex(getComputedStyle(svgParts[i]).fill);
     controlsList.appendChild(el('div', [
       el('input', { id: inputID, type: 'checkbox', 'data-id': i, checked: true, onchange: function() {
@@ -365,13 +399,18 @@ const fetchSVG = function (src) {
     });
 }
 
+const wrapperClasses = new Set();
+if (fullscreen) wrapperClasses.add('fullscreen');
+if (window.innerWidth <= 400) wrapperClasses.add('mobile');
 if (opt.localFile && localStorage.getItem('svg')) { // Load from localStorage
-  renderPage('loaded');
+  wrapperClasses.add('loaded');
   processSVG(localStorage.getItem('svg'));
 } else if (opt.src) { // load from external url
   imageTitle = opt.src.split('/')[opt.src.split('/').length - 1].split('.')[0];
-  renderPage('loaded');
+  wrapperClasses.add('loaded');
+  renderPage([...wrapperClasses].join('  '));
   fetchSVG(opt.src);
 } else { // load from user input
-  renderPage();
+  renderPage([...wrapperClasses].join('  '));
 }
+

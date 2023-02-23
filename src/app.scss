@@ -1,25 +1,28 @@
+$label-colour: #ccc;
+$label-colour-hover: #aaa;
+
 * {
   margin: 0;
   padding: 0;
   border: 0;
   outline: none;
+  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 }
 
 /* === DISPLAY: NONE === */
 
-#reset, .dragging #url, .loaded #start, div.left, #controls, #controls input[type=checkbox]:checked ~ input[type=color]:after {
+#reset, .dragging #url, .loaded #start, div.left, #controls, #controls input[type=checkbox]:checked ~ input[type=color]:after,
+.mobile .resize {
   display: none;
 }
 
-/* === DISPLAY: BLOCK === */
+/* === DISPLAY: BLOCK & FLEX === */
 
-#start, .loaded div.left, .loaded #controls, loaded.dragging #dropzone {
+.loaded #controls, loaded.dragging #dropzone {
   display: block;
 }
 
-/* === DISPLAY: FLEX === */
-
-.loaded #reset {
+#start, .loaded #reset, .loaded div.left {
   display: flex;
 }
 
@@ -28,23 +31,37 @@ html {
 }
 
 body {
-  font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
   font-size: 0.8rem;
   line-height: 1.3rem;
   height: 100%;
 }
 
 #wrapper {
-  width: 740px;
+  max-width: 940px;
   height: 100%;
   margin: 0 auto;
   position: relative;
+
+  &.mobile,
+  &.fullscreen {
+    max-width: 100%;
+
+    footer {
+      height: 0;
+    }
+
+    main {
+      height: calc(100% - 60px);
+      border-radius: 0;
+    }
+  }
 }
 
 #start {
   width: 100%;
   height: 100%;
   position: relative;
+  flex-direction: column;
 }
 
 .loaded.dragging #start {
@@ -61,10 +78,8 @@ body {
   width: calc(100% - 40px);
   height: calc(70% - 40px);
   padding: 20px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
+  flex: 1;
+  position: relative;
 }
 
 .dragging #dropzone {
@@ -86,101 +101,156 @@ body {
 #dropzone label {
   width: calc(100% - 20px);
   height: calc(100% - 20px);
-  border: 10px dashed #ccc;
+  border: 10px dashed $label-colour;
   border-radius: 25px;
   display: flex;
-  color: #ccc;
+  color: $label-colour;
   justify-content: center;
   align-items: center;
 }
 
-.dragging #dropzone:hover label {
+.dragging #dropzone label {
   border-color: lightgreen;
   color: lightgreen;
 }
 
 #dropzone:hover label {
-  border-color: #aaa;
-  color: #aaa;
+  border-color: $label-colour-hover;
+  color: $label-colour-hover;
 }
 
 #dropzone label span {
+  padding: 0 20px;
   display: block;
   text-align: center;
   font-size: 1.8rem;
   font-weight: bold;
+  line-height: 2rem;
 }
 
 #url {
   width: 100%;
-  height: calc(30% - 40px);
   padding: 20px 0;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-  color: #ccc;
+  color: $label-colour;
   text-align: center;
-}
 
-#url label {
-  margin: 0 0 10px;
-  font-size: 1.4rem;
-  font-weight: bold;
-  display: block;
-}
+  label {
+    margin: 0 0 10px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    display: block;
+  }
 
-#url input {
-  width: calc(100% - 80px);
-  margin: 0 auto;
-  padding: 5px 20px;
-  background: rgba(255,255,255,0.8);
-  border-radius: 25px;
-  color: #ccc;
-  display: block;
-  font-size: 1.2rem;
-}
+  label:hover {
+    color: $label-colour-hover;
+    cursor: pointer;
+  }
+  
+  input {
+    width: calc(100% - 60px);
+    margin: 0 auto;
+    padding: 10px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 5px;
+    color: #ccc;
+    display: block;
+    font-size: 1.2rem;
+  }
+  
+  input:hover,
+  input:focus {
+    background: #fff;
+    color: #444;
+  }
 
-#url input:hover,
-#url input:focus {
-  background: #fff;
-  color: #444;
+  button {
+    width: calc(100% - 40px);
+    margin: 10px auto 0;
+    padding: 10px;
+  }
 }
 
 header {
   height: 60px;
+  padding: 0 20px;
+  display: flex;
+  gap: 5px;
+
+  .title {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h1 {
+      font-size: 1.2rem;
+    }
+
+    & > span {
+      color: $label-colour-hover;
+    }
+
+    #reset {
+      width: 50px;
+      height: 50px;
+      text-transform: uppercase;
+      text-align: center;
+      font-weight: bold;
+      background: #eee;
+      color: #444;
+      border-radius: 25px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      user-select: none;
+    }
+    
+    #reset:hover {
+      background-color: #000;
+      color: #fff;
+    }
+  }
+
+  .github,
+  .resize {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+  
+      path {
+        fill: $label-colour;
+      }
+    }
+
+    &:hover {
+      transform: scale(1.2, 1.2);
+      transition: all 0.1s linear;
+
+      svg path {
+        fill: $label-colour-hover;
+      }
+    }
+  }
+
+  .github {
+    padding: 10px;
+  }
+
+  .resize {
+    cursor: pointer;
+  }
 }
 
 .loaded header {
-  padding-left: 60px;
-}
-
-h1 {
-  padding: 10px 0 0;
-  font-size: 1rem;
-}
-
-#reset {
-  width: 50px;
-  height: 50px;
-  text-transform: uppercase;
-  text-align: center;
-  font-weight: bold;
-  background: #eee;
-  color: #444;
-  border-radius: 25px;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 5px;
-  left: 0;
-  user-select: none;
-}
-
-#reset:hover {
-  background-color: lightsalmon;
-  color: #000;
+  padding-left: 75px;
 }
 
 main {
@@ -193,14 +263,14 @@ main {
   display: flex;
   flex-wrap: wrap;
   position: relative;
-}
+  overflow: hidden;
 
-main > .left {
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(45deg, rgba(210,210,210,0.7) 0%,rgba(250,250,250,0.7) 100%);
-  border-radius: 25px 0 0 25px;
-
+  & > .left {
+    height: 100%;
+    background: linear-gradient(45deg, rgba(210,210,210,0.7) 0%,rgba(250,250,250,0.7) 100%);
+    flex: 1;
+    flex-direction: column;
+  }
 }
 
 #display {
@@ -208,10 +278,10 @@ main > .left {
   align-items: center;
   justify-content: center;
   display: flex;
+  flex: 1;
 }
 
 .left > fieldset {
-  height: 107px;
   padding: 20px;
   color: rgba(0,0,0,0.5);
   font-size: 0.7rem;
@@ -241,10 +311,6 @@ main > .left {
   text-decoration: underline;
 }
 
-.left legend span.on:hover {
-
-}
-
 .left fieldset > div {
   overflow: hidden;
   display: inline-block;
@@ -259,30 +325,35 @@ main > .left {
   text-align: right;
 }
 
+input[type=text],
+input[type=number] {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 3px;
+  color: rgba(0,0,0,0.5);
+  font-size: 0.9rem;
+  cursor: pointer;
+  -moz-appearance: textfield;
+
+  &:hover,
+  &:focus {
+  background: #fff;
+  color: #000;
+}
+}
+
 .left fieldset input[type=number] {
   width: 50px;
   height: 23px;
   margin-right: 3px;
   padding: 0 5px;
-  background: rgba(255, 255, 255, 0.6);
-  color: rgba(0,0,0,0.5);
   font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
-  font-size: 0.9rem;
-  cursor: pointer;
   text-align: right;
-  -moz-appearance: textfield;
-}
-
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.left fieldset input[type=number]:hover,
-.left fieldset input[type=number]:focus {
-  background: #fff;
-  color: #000;
+  
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
 }
 
 #export_size span {
@@ -318,106 +389,109 @@ input[type=number]::-webkit-outer-spin-button {
   padding-left: 5px;
 }
 
-button#download {
+button {
   width: 100%;
   height: 50px;
   margin: 0 auto;
   background: #b9ffba;
+  border-radius: 5px;
   font-size: 1.2rem;
+  font-weight: bold;
   line-height: 1.2rem;
   text-transform: uppercase;
   letter-spacing: 2px;
   display: block;
   cursor: pointer;
-}
-
-button#download:hover {
-  background: #b2f590;
+  
+  &:hover {
+    background: #b2f590;
+  }
 }
 
 #controls {
   width: 40%;
+  min-width: 190px;
+  max-width: 350px;
   height: 100%;
   background: rgb(255,230,230);
-  border-radius: 0 25px 25px 0;
   overflow: auto;
-}
 
-#controls h2 {
+  h2 {
     padding: 13px 10px;
     text-align: center;
-}
-
-#controls fieldset > div {
-  margin-bottom: 5px;
-  background-color: rgba(255,255,255,0.2);
-  position: relative;
-  cursor: pointer;
-  user-select: none;
-}
-
-#controls input[type=checkbox] {
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  top: calc(50% - 10px);
-  left: 20px;
-  cursor: pointer;
-}
-
-#controls label {
-  padding: 12px 80px 12px 60px;
-  color: rgba(0, 0, 0, 0.5);
-  display: block;
-  cursor: pointer;
-}
-
-#controls input[type=checkbox]:checked + label {
-  color: rgba(0, 0, 0, 1);
-}
-
-#controls input[type=color] {
-  width: 30px;
-  height: 30px;
-  border-radius: 20px;
-  border: none;
-  -webkit-appearance: none;
-  cursor: pointer;
-  transition: width 0.1s, height 0.1s, top 0.1s, right 0.1s;
-  position: absolute;
-  right: 20px;
-  top: calc(50% - 15px);
-}
-
-input[type=color]::-webkit-color-swatch-wrapper {
-  padding: 0;
-}
-input[type=color]::-webkit-color-swatch {
-  border: none;
-  border-radius: 20px;
-}
-
-#controls input[type=color]:hover {
-  width: 36px;
-  height: 36px;
-  top: calc(50% - 18px);
-  right: 17px;
-}
-
-#controls input[type=color]:after {
-  width: 100%;
-  height: 100%;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.5);
-  content: '';
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-#controls fieldset > div:hover {
-  background-color: rgba(255,255,255,0.7);
+  }
+  
+  fieldset > div {
+    margin-bottom: 5px;
+    background-color: rgba(255,255,255,0.2);
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: calc(50% - 10px);
+    left: 20px;
+    cursor: pointer;
+  }
+  
+  label {
+    padding: 12px 80px 12px 60px;
+    color: rgba(0, 0, 0, 0.5);
+    display: block;
+    cursor: pointer;
+  }
+  
+  input[type=checkbox]:checked + label {
+    color: rgba(0, 0, 0, 1);
+  }
+  
+  input[type=color] {
+    width: 30px;
+    height: 30px;
+    border-radius: 20px;
+    border: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    transition: width 0.1s, height 0.1s, top 0.1s, right 0.1s;
+    position: absolute;
+    right: 20px;
+    top: calc(50% - 15px);
+  }
+  
+  input[type=color]::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  input[type=color]::-webkit-color-swatch {
+    border: none;
+    border-radius: 20px;
+  }
+  
+  input[type=color]:hover {
+    width: 36px;
+    height: 36px;
+    top: calc(50% - 18px);
+    right: 17px;
+  }
+  
+  input[type=color]:after {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.5);
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  fieldset > div:hover {
+    background-color: rgba(255,255,255,0.7);
+  }
 }
 
 footer {
